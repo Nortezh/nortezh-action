@@ -1,0 +1,7 @@
+name: Nortezh Action
+description: 
+author: Nortezh
+
+runs:
+  using: node20
+  main: dist/index.js
