@@ -14,7 +14,7 @@ jobs:
           action: deployment.create-revision
           project: "project-oei-1"
           location: "nortezh-stag"
-          name: test-6
+          name: test-xxx
           image: nginx
           port: 85
           type: WebService

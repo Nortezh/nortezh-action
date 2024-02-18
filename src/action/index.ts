@@ -1,0 +1,1 @@
+export { deployNewRevision } from "./deployNewRevision";
