@@ -1,0 +1,23 @@
+name: Test
+
+on:
+    pull_request:
+
+jobs:
+  run-my-action:
+    name: Checks if this action works
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./
+        with:
+          action: deployment.create-revision
+          project: "project-oei-1"
+          location: "nortezh-stag"
+          name: test-6
+          image: nginx
+          port: 85
+          type: WebService
+        env:
+            DEPLOYS_AUTH_USER: ${{ secrets.SA_AUTH_EMAIL }}
+            DEPLOYS_AUTH_PASS: ${{ secrets.SA_AUTH_KEY }}
