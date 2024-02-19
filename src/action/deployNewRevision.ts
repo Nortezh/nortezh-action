@@ -4,14 +4,20 @@ import {
   DeployNewRevisionRequest,
   ErrorCode,
   GetDeploymentRequest,
-  Inputs,
 } from "../types";
 import DeploymentService from "../deployment";
 
-export const deployNewRevision = async (
-  input: Inputs
-): Promise<void> => {
+export const deployNewRevision = async (): Promise<void> => {
   try {
+    const input = {
+      project: core.getInput("project", { required: true }),
+      location: core.getInput("location", { required: true }),
+      name: core.getInput("name", { required: true }),
+      image: core.getInput("image", { required: true }),
+      port: parseInt(core.getInput("port", { required: true })),
+      type: core.getInput("type", { required: true }),
+    };
+
     const createResponse = await DeploymentService.create(
       input as CreateDeploymentRequest
     );

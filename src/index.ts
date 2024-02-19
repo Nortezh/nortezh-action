@@ -1,29 +1,20 @@
 import * as core from "@actions/core";
-import { DeploymentActionType, Inputs } from "./types";
+import { DeploymentActionType } from "./types";
 import { deployNewRevision } from "./action";
 
 async function run(): Promise<void> {
   try {
-    const inputs: Inputs = {
-      action: core.getInput("action") as DeploymentActionType,
-      project: core.getInput("project"),
-      location: core.getInput("location"),
-      name: core.getInput("name"),
-      image: core.getInput("image"),
-      port: parseInt(core.getInput("port")),
-      type: core.getInput("type"),
-    };
-    
-    if (Object.values(DeploymentActionType).includes(inputs.action)) {
-      if (inputs.action === DeploymentActionType.Create) {
-        await deployNewRevision(inputs);
+    const actionType = core.getInput("action") as DeploymentActionType;
+    if (Object.values(DeploymentActionType).includes(actionType)) {
+      if (actionType === DeploymentActionType.Create) {
+        await deployNewRevision();
       }
 
-      if (inputs.action === DeploymentActionType.Delete) {
+      if (actionType === DeploymentActionType.Delete) {
         // delete
       }
 
-      if (inputs.action === DeploymentActionType.Clone) {
+      if (actionType === DeploymentActionType.Clone) {
         // clone
       }
     } else {

@@ -28240,9 +28240,17 @@ exports.deployNewRevision = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const types_1 = __nccwpck_require__(5077);
 const deployment_1 = __importDefault(__nccwpck_require__(1526));
-const deployNewRevision = async (input) => {
+const deployNewRevision = async () => {
     var _a, _b;
     try {
+        const input = {
+            project: core.getInput("project", { required: true }),
+            location: core.getInput("location", { required: true }),
+            name: core.getInput("name", { required: true }),
+            image: core.getInput("image", { required: true }),
+            port: parseInt(core.getInput("port", { required: true })),
+            type: core.getInput("type", { required: true }),
+        };
         const createResponse = await deployment_1.default.create(input);
         if (!createResponse.ok &&
             ((_a = createResponse.error) === null || _a === void 0 ? void 0 : _a.code) === types_1.ErrorCode.DEPLOYMENT_NAME_ALREADY_EXISTS) {
@@ -28380,23 +28388,15 @@ const types_1 = __nccwpck_require__(5077);
 const action_1 = __nccwpck_require__(7875);
 async function run() {
     try {
-        const inputs = {
-            action: core.getInput("action"),
-            project: core.getInput("project"),
-            location: core.getInput("location"),
-            name: core.getInput("name"),
-            image: core.getInput("image"),
-            port: parseInt(core.getInput("port")),
-            type: core.getInput("type"),
-        };
-        if (Object.values(types_1.DeploymentActionType).includes(inputs.action)) {
-            if (inputs.action === types_1.DeploymentActionType.Create) {
-                await (0, action_1.deployNewRevision)(inputs);
+        const actionType = core.getInput("action");
+        if (Object.values(types_1.DeploymentActionType).includes(actionType)) {
+            if (actionType === types_1.DeploymentActionType.Create) {
+                await (0, action_1.deployNewRevision)();
             }
-            if (inputs.action === types_1.DeploymentActionType.Delete) {
+            if (actionType === types_1.DeploymentActionType.Delete) {
                 // delete
             }
-            if (inputs.action === types_1.DeploymentActionType.Clone) {
+            if (actionType === types_1.DeploymentActionType.Clone) {
                 // clone
             }
         }

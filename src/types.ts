@@ -9,16 +9,6 @@ export enum ErrorCode {
   DEPLOYMENT_NAME_ALREADY_EXISTS = "DEPLOYMENT_NAME_ALREADY_EXISTS",
 }
 
-export interface Inputs {
-  action: DeploymentActionType;
-  project: string;
-  location: string;
-  name: string;
-  image: string;
-  port: number;
-  type: string;
-}
-
 export interface ResponseError {
   code: string;
   message?: string;
