@@ -112,3 +112,8 @@ export interface CreateDeploymentResponse {
 }
 
 export interface DeployNewRevisionRequest extends CreateDeploymentRequest {}
+export interface DeleteDeploymentRequest {
+  project: string;
+  location: string;
+  name: string;
+}

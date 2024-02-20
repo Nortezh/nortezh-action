@@ -28323,6 +28323,69 @@ exports.cloneDeployment = cloneDeployment;
 
 /***/ }),
 
+/***/ 8100:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.deleteDeployment = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const deployment_1 = __importDefault(__nccwpck_require__(1526));
+const deleteDeployment = async () => {
+    try {
+        const input = {
+            project: core.getInput("project", { required: true }),
+            location: core.getInput("location", { required: true }),
+            name: core.getInput("name", { required: true }),
+        };
+        const deleteResponse = await deployment_1.default.delete(input);
+        if (!deleteResponse.ok) {
+            if (!deleteResponse.error ||
+                Object.keys(deleteResponse.error).length === 0) {
+                core.setFailed(`Deleting the deployment failed due to an unexpected error`);
+                return;
+            }
+            core.setFailed(` ${deleteResponse.error.code}: ${deleteResponse.error.message}`);
+            return;
+        }
+    }
+    catch (error) {
+        if (error instanceof Error)
+            core.setFailed(error.message);
+    }
+};
+exports.deleteDeployment = deleteDeployment;
+
+
+/***/ }),
+
 /***/ 7648:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -28430,9 +28493,11 @@ exports.deployNewRevision = deployNewRevision;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deployNewRevision = exports.cloneDeployment = void 0;
+exports.deployNewRevision = exports.deleteDeployment = exports.cloneDeployment = void 0;
 var cloneDeployment_1 = __nccwpck_require__(5418);
 Object.defineProperty(exports, "cloneDeployment", ({ enumerable: true, get: function () { return cloneDeployment_1.cloneDeployment; } }));
+var deleteDeployment_1 = __nccwpck_require__(8100);
+Object.defineProperty(exports, "deleteDeployment", ({ enumerable: true, get: function () { return deleteDeployment_1.deleteDeployment; } }));
 var deployNewRevision_1 = __nccwpck_require__(7648);
 Object.defineProperty(exports, "deployNewRevision", ({ enumerable: true, get: function () { return deployNewRevision_1.deployNewRevision; } }));
 
@@ -28473,6 +28538,9 @@ class DeploymentService extends httpClient_1.default {
     static async create(payload, config) {
         return await this.sendRequest(`${baseUrl}/deployment.create`, payload, config);
     }
+    static async delete(payload, config) {
+        return await this.sendRequest(`${baseUrl}/deployment.delete`, payload, config);
+    }
 }
 exports["default"] = DeploymentService;
 
@@ -28511,6 +28579,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const types_1 = __nccwpck_require__(5077);
 const action_1 = __nccwpck_require__(7875);
+const deleteDeployment_1 = __nccwpck_require__(8100);
 async function run() {
     try {
         const actionType = core.getInput("action");
@@ -28519,7 +28588,7 @@ async function run() {
                 await (0, action_1.deployNewRevision)();
             }
             if (actionType === types_1.DeploymentActionType.Delete) {
-                // delete
+                await (0, deleteDeployment_1.deleteDeployment)();
             }
             if (actionType === types_1.DeploymentActionType.Clone) {
                 await (0, action_1.cloneDeployment)();

@@ -1,6 +1,7 @@
 import * as core from "@actions/core";
 import { DeploymentActionType } from "./types";
 import { cloneDeployment, deployNewRevision } from "./action";
+import { deleteDeployment } from "./action/deleteDeployment";
 
 async function run(): Promise<void> {
   try {
@@ -11,7 +12,7 @@ async function run(): Promise<void> {
       }
 
       if (actionType === DeploymentActionType.Delete) {
-        // delete
+        await deleteDeployment();
       }
 
       if (actionType === DeploymentActionType.Clone) {
