@@ -10,7 +10,7 @@ export enum ErrorCode {
 }
 
 export interface ResponseError {
-  code: string;
+  code?: string;
   message?: string;
 }
 

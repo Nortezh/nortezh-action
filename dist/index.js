@@ -28290,7 +28290,6 @@ const deployNewRevision = async () => {
             return;
         }
         core.setOutput("public-url", (_b = getResponse.result) === null || _b === void 0 ? void 0 : _b.url);
-        return;
     }
     catch (error) {
         if (error instanceof Error)

@@ -81,7 +81,6 @@ export const deployNewRevision = async (): Promise<void> => {
     }
 
     core.setOutput("public-url", getResponse.result?.url);
-    return;
   } catch (error) {
     if (error instanceof Error) core.setFailed(error.message);
   }
