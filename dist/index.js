@@ -28204,6 +28204,121 @@ exports["default"] = _default;
 
 /***/ }),
 
+/***/ 5418:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.cloneDeployment = void 0;
+const core = __importStar(__nccwpck_require__(2186));
+const deployment_1 = __importDefault(__nccwpck_require__(1526));
+const utils_1 = __nccwpck_require__(6252);
+const cloneDeployment = async () => {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
+    try {
+        const input = {
+            project: core.getInput("project", { required: true }),
+            location: core.getInput("location", { required: true }),
+            name: core.getInput("name", { required: true }),
+            image: core.getInput("image", { required: true }),
+            newName: core.getInput("new-name") ||
+                `${core.getInput("name")}-${(0, utils_1.cryptpRandomString)(6)}`,
+        };
+        const getResponse = await deployment_1.default.get({
+            project: input.project,
+            location: input.location,
+            name: input.name,
+        });
+        if (!getResponse.ok) {
+            if (!getResponse.error || Object.keys(getResponse.error).length === 0) {
+                core.setFailed(`Getting the deployment failed due to an unexpected error`);
+                return;
+            }
+            core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}`);
+            return;
+        }
+        const cloneResponse = await deployment_1.default.create({
+            project: input.project,
+            location: input.location,
+            name: input.newName,
+            image: input.image,
+            minReplica: (_a = getResponse.result) === null || _a === void 0 ? void 0 : _a.minReplica,
+            maxReplica: (_b = getResponse.result) === null || _b === void 0 ? void 0 : _b.maxReplica,
+            type: (_c = getResponse.result) === null || _c === void 0 ? void 0 : _c.type,
+            port: (_d = getResponse.result) === null || _d === void 0 ? void 0 : _d.port,
+            protocol: (_e = getResponse.result) === null || _e === void 0 ? void 0 : _e.protocol,
+            internal: (_f = getResponse.result) === null || _f === void 0 ? void 0 : _f.internal,
+            env: (_g = getResponse.result) === null || _g === void 0 ? void 0 : _g.env,
+            command: (_h = getResponse.result) === null || _h === void 0 ? void 0 : _h.command,
+            arg: (_j = getResponse.result) === null || _j === void 0 ? void 0 : _j.arg,
+            pullSecret: (_k = getResponse.result) === null || _k === void 0 ? void 0 : _k.pullSecret,
+            disk: (_l = getResponse.result) === null || _l === void 0 ? void 0 : _l.disk,
+            schedule: (_m = getResponse.result) === null || _m === void 0 ? void 0 : _m.schedule,
+            mountData: (_o = getResponse.result) === null || _o === void 0 ? void 0 : _o.mountData,
+            resource: (_p = getResponse.result) === null || _p === void 0 ? void 0 : _p.resource,
+        });
+        if (!cloneResponse.ok) {
+            if (!cloneResponse.error ||
+                Object.keys(cloneResponse.error).length === 0) {
+                core.setFailed(`Cloning the deployment failed due to an unexpected error`);
+                return;
+            }
+            core.setFailed(` ${cloneResponse.error.code}: ${cloneResponse.error.message}`);
+            return;
+        }
+        const clonedResponse = await deployment_1.default.get({
+            project: input.project,
+            location: input.location,
+            name: input.newName,
+        });
+        if (!clonedResponse.ok) {
+            if (!clonedResponse.error ||
+                Object.keys(clonedResponse.error).length === 0) {
+                core.setFailed(`Getting the cloned deployment failed due to an unexpected error`);
+                return;
+            }
+            core.setFailed(` ${clonedResponse.error.code}: ${clonedResponse.error.message}`);
+            return;
+        }
+        core.setOutput("public-url", (_q = clonedResponse.result) === null || _q === void 0 ? void 0 : _q.url);
+    }
+    catch (error) {
+        if (error instanceof Error)
+            core.setFailed(error.message);
+    }
+};
+exports.cloneDeployment = cloneDeployment;
+
+
+/***/ }),
+
 /***/ 7648:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -28307,7 +28422,9 @@ exports.deployNewRevision = deployNewRevision;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.deployNewRevision = void 0;
+exports.deployNewRevision = exports.cloneDeployment = void 0;
+var cloneDeployment_1 = __nccwpck_require__(5418);
+Object.defineProperty(exports, "cloneDeployment", ({ enumerable: true, get: function () { return cloneDeployment_1.cloneDeployment; } }));
 var deployNewRevision_1 = __nccwpck_require__(7648);
 Object.defineProperty(exports, "deployNewRevision", ({ enumerable: true, get: function () { return deployNewRevision_1.deployNewRevision; } }));
 
@@ -28396,7 +28513,7 @@ async function run() {
                 // delete
             }
             if (actionType === types_1.DeploymentActionType.Clone) {
-                // clone
+                await (0, action_1.cloneDeployment)();
             }
         }
         else {
@@ -28435,6 +28552,28 @@ var ErrorCode;
 
 /***/ }),
 
+/***/ 3193:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.cryptpRandomString = void 0;
+const crypto_1 = __importDefault(__nccwpck_require__(6113));
+const cryptpRandomString = (length) => {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const randomArray = new Uint8Array(length);
+    crypto_1.default.getRandomValues(randomArray);
+    return Array.from(randomArray, (number) => chars[number % chars.length]).join('');
+};
+exports.cryptpRandomString = cryptpRandomString;
+
+
+/***/ }),
+
 /***/ 779:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -28457,6 +28596,32 @@ class HttpClient {
     }
 }
 exports["default"] = HttpClient;
+
+
+/***/ }),
+
+/***/ 6252:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __exportStar = (this && this.__exportStar) || function(m, exports) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+__exportStar(__nccwpck_require__(3193), exports);
+__exportStar(__nccwpck_require__(779), exports);
 
 
 /***/ }),
