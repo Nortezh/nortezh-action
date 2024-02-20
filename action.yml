@@ -24,6 +24,9 @@ inputs:
   type:
     description: Deployment Type
     required: false
+  new-name:
+    description: New Deployment Name
+    required: false
 
 outputs:
   public-url:
