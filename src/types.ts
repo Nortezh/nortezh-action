@@ -20,12 +20,6 @@ export interface ResponseDto<T = unknown> {
   error?: ResponseError;
 }
 
-interface Disk {
-  name: string;
-  mountPath: string;
-  subPath: string;
-}
-
 export interface GetDeploymentRequest {
   project: string;
   location: string;
@@ -44,14 +38,14 @@ export interface GetDeploymentResponse {
   port: number;
   protocol: string;
   internal: boolean;
-  env: Record<string, string>;
+  env: any;
   command: string[];
   arg: string[];
   pullSecret: string;
-  disk: Disk;
+  disk: any;
   schedule: string;
-  mountData: Record<string, string>;
-  resource: Resource;
+  mountData: any;
+  resource: any;
   revision: number;
   latestDeployAt: string;
   deployedBy: number;
@@ -79,36 +73,10 @@ export interface Deployment {
   type: string;
 }
 
-interface ResourceValue {
-  cpu: string;
-  memory: string;
-}
+export interface DeployNewRevisionRequest extends Deployment {}
 
-interface Resource {
-  requests: ResourceValue;
-  limits: ResourceValue;
-}
-
-export interface CreateDeploymentRequest extends Deployment {
-  minReplica?: number;
-  maxReplica?: number;
-  protocol?: string;
-  internal?: boolean;
-  env?: Record<string, string>;
-  addEnv?: Record<string, string>;
-  removeEnv?: string[];
-  command?: string[];
-  args?: string[];
-  pullSecret?: string;
-  disk?: Disk;
-  schedule?: string;
-  mountData?: Record<string, string>;
-  resources?: Resource;
-  
-}
+export interface CreateDeploymentRequest extends Deployment {}
 
 export interface CreateDeploymentResponse {
   id: number;
 }
-
-export interface DeployNewRevisionRequest extends CreateDeploymentRequest {}

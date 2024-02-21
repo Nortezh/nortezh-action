@@ -1,6 +1,6 @@
 import * as core from "@actions/core";
 import { DeploymentActionType } from "./types";
-import { cloneDeployment, deployNewRevision } from "./action";
+import { deployNewRevision } from "./action";
 
 async function run(): Promise<void> {
   try {
@@ -15,7 +15,7 @@ async function run(): Promise<void> {
       }
 
       if (actionType === DeploymentActionType.Clone) {
-        await cloneDeployment();
+        // clone
       }
     } else {
       core.setFailed(
