@@ -2,6 +2,33 @@ name: Nortezh Action
 description: 
 author: Nortezh
 
+inputs:
+  action:
+    description: Deployment Action
+    required: true
+  project:
+    description: Project
+    required: true
+  location:
+    description: Deploy Location ID
+    required: true
+  name:
+    description: Deployment Name
+    required: true
+  image:
+    description: Docker Image to deploy
+    required: false
+  port:
+    description: Deployment Port
+    required: false
+  type:
+    description: Deployment Type
+    required: false
+
+outputs:
+  public_url:
+    description: Deployment Public URL
+    
 runs:
   using: node20
   main: dist/index.js

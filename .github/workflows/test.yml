@@ -14,10 +14,10 @@ jobs:
           action: deployment.create-revision
           project: "project-oei-1"
           location: "nortezh-stag"
-          name: test-6
+          name: test-xxx
           image: nginx
           port: 85
           type: WebService
         env:
-            DEPLOYS_AUTH_USER: ${{ secrets.SA_AUTH_EMAIL }}
-            DEPLOYS_AUTH_PASS: ${{ secrets.SA_AUTH_KEY }}
+          SA_AUTH_EMAIL: ${{ secrets.SA_AUTH_EMAIL }}
+          SA_AUTH_KEY: ${{ secrets.SA_AUTH_KEY }}
