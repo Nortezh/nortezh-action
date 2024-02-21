@@ -132,4 +132,18 @@ describe("deployNewRevision", () => {
     );
     expect(core.setOutput).not.toHaveBeenCalled();
   });
+
+  it("should handle unknown errors", async () => {
+    (DeploymentService.create as jest.Mock).mockRejectedValue(
+      "Unknown error"
+    );
+
+    await deployNewRevision();
+
+    expect(DeploymentService.create).toHaveBeenCalled;
+    expect(core.setFailed).toHaveBeenCalledWith(
+      "An unknown error occurred: \nUnknown error"
+    );
+    expect(core.setOutput).not.toHaveBeenCalled();
+  });
 });

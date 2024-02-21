@@ -9,13 +9,15 @@ import {
   ResponseDto,
 } from "./types";
 
+const baseUrl = "https://api-stag-899570118063554590.nortezh0.deploys.app/user";
+
 export default class DeploymentService extends HttpClient {
   private static async sendRequest<T>(
     url: string,
     payload: any,
     config?: AxiosRequestConfig
   ): Promise<T> {
-    const credential = `${process.env["DEPLOYS_AUTH_USER"]}:${process.env["DEPLOYS_AUTH_PASS"]}`;
+    const credential = `${process.env["SA_AUTH_EMAIL"]}:${process.env["SA_AUTH_KEY"]}`;
     const encodedCred = Buffer.from(credential).toString("base64");
     const headers = {
       ...config?.headers,
@@ -35,7 +37,7 @@ export default class DeploymentService extends HttpClient {
     config?: AxiosRequestConfig
   ): Promise<ResponseDto<GetDeploymentResponse>> {
     return await this.sendRequest<ResponseDto<GetDeploymentResponse>>(
-      "https://api-stag-899570118063554590.nortezh0.deploys.app/user/deployment.get",
+      `${baseUrl}/deployment.get`,
       payload,
       config
     );
@@ -46,7 +48,7 @@ export default class DeploymentService extends HttpClient {
     config?: AxiosRequestConfig
   ): Promise<ResponseDto<any>> {
     return await this.sendRequest<ResponseDto<any>>(
-      "https://api-stag-899570118063554590.nortezh0.deploys.app/user/deployment.deploy",
+      `${baseUrl}/deployment.deploy`,
       payload,
       config
     );
@@ -57,10 +59,9 @@ export default class DeploymentService extends HttpClient {
     config?: AxiosRequestConfig
   ): Promise<ResponseDto<CreateDeploymentResponse>> {
     return await this.sendRequest<ResponseDto<CreateDeploymentResponse>>(
-      "https://api-stag-899570118063554590.nortezh0.deploys.app/user/deployment.create",
+      `${baseUrl}/deployment.create`,
       payload,
       config
     );
   }
-
 }

@@ -27,7 +27,7 @@ export interface GetDeploymentRequest {
 }
 
 export interface GetDeploymentResponse {
-  id: number;
+  id: string;
   project: string;
   location: string;
   name: string;
@@ -58,10 +58,10 @@ export interface GetDeploymentResponse {
   logUrl: string;
   eventUrl: string;
   podUrl: string;
-  StatusUrl: string;
+  statusUrl: string;
   address: string;
   internalAddress: string;
-  DeployedByEmail: string;
+  deployedByEmail: string;
 }
 
 export interface Deployment {
@@ -78,5 +78,5 @@ export interface DeployNewRevisionRequest extends Deployment {}
 export interface CreateDeploymentRequest extends Deployment {}
 
 export interface CreateDeploymentResponse {
-  id: number;
+  id: string;
 }

@@ -19,5 +19,5 @@ jobs:
           port: 85
           type: WebService
         env:
-            DEPLOYS_AUTH_USER: ${{ secrets.SA_AUTH_EMAIL }}
-            DEPLOYS_AUTH_PASS: ${{ secrets.SA_AUTH_KEY }}
+          SA_AUTH_EMAIL: ${{ secrets.SA_AUTH_EMAIL }}
+          SA_AUTH_KEY: ${{ secrets.SA_AUTH_KEY }}

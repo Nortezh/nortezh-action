@@ -80,8 +80,12 @@ export const deployNewRevision = async (): Promise<void> => {
       return;
     }
 
-    core.setOutput("public-url", getResponse.result?.url);
+    core.setOutput("public_url", getResponse.result?.url);
   } catch (error) {
-    if (error instanceof Error) core.setFailed(error.message);
+    if (error instanceof Error) {
+      core.setFailed(error.message);
+    } else {
+      core.setFailed(`An unknown error occurred: \n${error}`);
+    }
   }
 };

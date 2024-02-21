@@ -28289,11 +28289,15 @@ const deployNewRevision = async () => {
             core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}`);
             return;
         }
-        core.setOutput("public-url", (_b = getResponse.result) === null || _b === void 0 ? void 0 : _b.url);
+        core.setOutput("public_url", (_b = getResponse.result) === null || _b === void 0 ? void 0 : _b.url);
     }
     catch (error) {
-        if (error instanceof Error)
+        if (error instanceof Error) {
             core.setFailed(error.message);
+        }
+        else {
+            core.setFailed(`An unknown error occurred: \n${error}`);
+        }
     }
 };
 exports.deployNewRevision = deployNewRevision;
@@ -28324,9 +28328,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const httpClient_1 = __importDefault(__nccwpck_require__(779));
+const baseUrl = "https://api-stag-899570118063554590.nortezh0.deploys.app/user";
 class DeploymentService extends httpClient_1.default {
     static async sendRequest(url, payload, config) {
-        const credential = `${process.env["DEPLOYS_AUTH_USER"]}:${process.env["DEPLOYS_AUTH_PASS"]}`;
+        const credential = `${process.env["SA_AUTH_EMAIL"]}:${process.env["SA_AUTH_KEY"]}`;
         const encodedCred = Buffer.from(credential).toString("base64");
         const headers = {
             ...config === null || config === void 0 ? void 0 : config.headers,
@@ -28339,13 +28344,13 @@ class DeploymentService extends httpClient_1.default {
         return await this.post(url, payload, updatedConfig);
     }
     static async get(payload, config) {
-        return await this.sendRequest("https://api-stag-899570118063554590.nortezh0.deploys.app/user/deployment.get", payload, config);
+        return await this.sendRequest(`${baseUrl}/deployment.get`, payload, config);
     }
     static async deploy(payload, config) {
-        return await this.sendRequest("https://api-stag-899570118063554590.nortezh0.deploys.app/user/deployment.deploy", payload, config);
+        return await this.sendRequest(`${baseUrl}/deployment.deploy`, payload, config);
     }
     static async create(payload, config) {
-        return await this.sendRequest("https://api-stag-899570118063554590.nortezh0.deploys.app/user/deployment.create", payload, config);
+        return await this.sendRequest(`${baseUrl}/deployment.create`, payload, config);
     }
 }
 exports["default"] = DeploymentService;
@@ -28404,8 +28409,12 @@ async function run() {
         }
     }
     catch (error) {
-        if (error instanceof Error)
+        if (error instanceof Error) {
             core.setFailed(error.message);
+        }
+        else {
+            core.setFailed(`An unknown error occurred: \n${error}`);
+        }
     }
 }
 run();
