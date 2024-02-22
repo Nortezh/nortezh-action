@@ -7,7 +7,7 @@
     "build": "ncc build src/index.ts",
     "test": "jest",
     "prepare": "husky install",
-    "prettier": "prettier --write src/**/*.{js,ts}",
+    "prettier": "prettier --write ./src/**/*.ts",
     "lint": "eslint --debug src/",
     "lint:write": "eslint --debug src/ --fix"
   },

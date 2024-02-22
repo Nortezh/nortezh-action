@@ -1,5 +1,5 @@
-export { cloneDeployment } from "./cloneDeployment";
+export { cloneDeployment } from './cloneDeployment';
 
-export { deleteDeployment } from "./deleteDeployment";
+export { deleteDeployment } from './deleteDeployment';
 
-export { deployNewRevision } from "./deployNewRevision";
+export { deployNewRevision } from './deployNewRevision';

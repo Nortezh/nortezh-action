@@ -1,5 +1,5 @@
-import { AxiosRequestConfig } from "axios";
-import HttpClient from "./utils/httpClient";
+import { AxiosRequestConfig } from 'axios';
+import HttpClient from './utils/httpClient';
 import {
   CreateDeploymentRequest,
   CreateDeploymentResponse,
@@ -8,18 +8,18 @@ import {
   GetDeploymentRequest,
   GetDeploymentResponse,
   ResponseDto,
-} from "./types";
+} from './types';
 
-const baseUrl = "https://api-stag-899570118063554590.nortezh0.deploys.app/user";
+const baseUrl = 'https://api-stag-899570118063554590.nortezh0.deploys.app/user';
 
 export default class DeploymentService extends HttpClient {
-  private static async sendRequest<T>(
+  private static async sendRequest<T, D = unknown>(
     url: string,
-    payload: any,
-    config?: AxiosRequestConfig
+    payload?: D,
+    config?: AxiosRequestConfig,
   ): Promise<T> {
-    const credential = `${process.env["SA_AUTH_EMAIL"]}:${process.env["SA_AUTH_KEY"]}`;
-    const encodedCred = Buffer.from(credential).toString("base64");
+    const credential = `${process.env['SA_AUTH_EMAIL']}:${process.env['SA_AUTH_KEY']}`;
+    const encodedCred = Buffer.from(credential).toString('base64');
     const headers = {
       ...config?.headers,
       Authorization: `Basic ${encodedCred}`,
@@ -30,51 +30,50 @@ export default class DeploymentService extends HttpClient {
       headers,
     };
 
-    return await this.post<T>(url, payload, updatedConfig);
+    return await this.post<T, D>(url, payload, updatedConfig);
   }
 
   static async get(
     payload: GetDeploymentRequest,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<ResponseDto<GetDeploymentResponse>> {
     return await this.sendRequest<ResponseDto<GetDeploymentResponse>>(
       `${baseUrl}/deployment.get`,
       payload,
-      config
+      config,
     );
   }
 
   static async deploy(
     payload: DeployNewRevisionRequest,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<ResponseDto<any>> {
     return await this.sendRequest<ResponseDto<any>>(
       `${baseUrl}/deployment.deploy`,
       payload,
-      config
+      config,
     );
   }
 
   static async create(
     payload: CreateDeploymentRequest,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<ResponseDto<CreateDeploymentResponse>> {
     return await this.sendRequest<ResponseDto<CreateDeploymentResponse>>(
       `${baseUrl}/deployment.create`,
       payload,
-      config
+      config,
     );
   }
 
   static async delete(
     payload: DeleteDeploymentRequest,
-    config?: AxiosRequestConfig
+    config?: AxiosRequestConfig,
   ): Promise<ResponseDto<any>> {
     return await this.sendRequest<ResponseDto<any>>(
       `${baseUrl}/deployment.delete`,
       payload,
-      config
+      config,
     );
   }
-
 }

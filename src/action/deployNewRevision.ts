@@ -1,62 +1,44 @@
-import * as core from "@actions/core";
+import * as core from '@actions/core';
 import {
   CreateDeploymentRequest,
   DeployNewRevisionRequest,
   ErrorCode,
   GetDeploymentRequest,
-} from "../types";
-import DeploymentService from "../deployment";
+} from '../types';
+import DeploymentService from '../deployment';
 
 export const deployNewRevision = async (): Promise<void> => {
   try {
     const input = {
-      project: core.getInput("project", { required: true }),
-      location: core.getInput("location", { required: true }),
-      name: core.getInput("name", { required: true }),
-      image: core.getInput("image", { required: true }),
-      port: parseInt(core.getInput("port", { required: true })),
-      type: core.getInput("type", { required: true }),
+      project: core.getInput('project', { required: true }),
+      location: core.getInput('location', { required: true }),
+      name: core.getInput('name', { required: true }),
+      image: core.getInput('image', { required: true }),
+      port: parseInt(core.getInput('port', { required: true })),
+      type: core.getInput('type', { required: true }),
     };
 
-    const createResponse = await DeploymentService.create(
-      input as CreateDeploymentRequest
-    );
+    const createResponse = await DeploymentService.create(input as CreateDeploymentRequest);
     if (
       !createResponse.ok &&
       createResponse.error?.code === ErrorCode.DEPLOYMENT_NAME_ALREADY_EXISTS
     ) {
-      const deployResponse = await DeploymentService.deploy(
-        input as DeployNewRevisionRequest
-      );
+      const deployResponse = await DeploymentService.deploy(input as DeployNewRevisionRequest);
       if (!deployResponse.ok) {
-        if (
-          !deployResponse.error ||
-          Object.keys(deployResponse.error).length === 0
-        ) {
-          core.setFailed(
-            `Deploying the new revision failed due to an unexpected error`
-          );
+        if (!deployResponse.error || Object.keys(deployResponse.error).length === 0) {
+          core.setFailed(`Deploying the new revision failed due to an unexpected error`);
           return;
         }
-        core.setFailed(
-          ` ${deployResponse.error.code}: ${deployResponse.error.message}`
-        );
+        core.setFailed(` ${deployResponse.error.code}: ${deployResponse.error.message}`);
         return;
       }
     } else {
       if (!createResponse.ok) {
-        if (
-          !createResponse.error ||
-          Object.keys(createResponse.error).length === 0
-        ) {
-          core.setFailed(
-            `Creating the deployment failed due to an unexpected error`
-          );
+        if (!createResponse.error || Object.keys(createResponse.error).length === 0) {
+          core.setFailed(`Creating the deployment failed due to an unexpected error`);
           return;
         }
-        core.setFailed(
-          ` ${createResponse.error.code}: ${createResponse.error.message}`
-        );
+        core.setFailed(` ${createResponse.error.code}: ${createResponse.error.message}`);
         return;
       }
     }
@@ -69,18 +51,14 @@ export const deployNewRevision = async (): Promise<void> => {
 
     if (!getResponse.ok) {
       if (!getResponse.error || Object.keys(getResponse.error).length === 0) {
-        core.setFailed(
-          `Getting the deployment failed due to an unexpected error`
-        );
+        core.setFailed(`Getting the deployment failed due to an unexpected error`);
         return;
       }
-      core.setFailed(
-        ` ${getResponse.error.code}: ${getResponse.error.message}`
-      );
+      core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}`);
       return;
     }
 
-    core.setOutput("public_url", getResponse.result?.url);
+    core.setOutput('public_url', getResponse.result?.url);
   } catch (error) {
     if (error instanceof Error) {
       core.setFailed(error.message);

@@ -28244,12 +28244,11 @@ const cloneDeployment = async () => {
     var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o, _p, _q;
     try {
         const input = {
-            project: core.getInput("project", { required: true }),
-            location: core.getInput("location", { required: true }),
-            name: core.getInput("name", { required: true }),
-            image: core.getInput("image", { required: true }),
-            newName: core.getInput("new_name") ||
-                `${core.getInput("name")}-${(0, utils_1.cryptpRandomString)(6)}`,
+            project: core.getInput('project', { required: true }),
+            location: core.getInput('location', { required: true }),
+            name: core.getInput('name', { required: true }),
+            image: core.getInput('image', { required: true }),
+            newName: core.getInput('new_name') || `${core.getInput('name')}-${(0, utils_1.cryptpRandomString)(6)}`,
         };
         const getResponse = await deployment_1.default.get({
             project: input.project,
@@ -28285,8 +28284,7 @@ const cloneDeployment = async () => {
             resource: (_p = getResponse.result) === null || _p === void 0 ? void 0 : _p.resource,
         });
         if (!cloneResponse.ok) {
-            if (!cloneResponse.error ||
-                Object.keys(cloneResponse.error).length === 0) {
+            if (!cloneResponse.error || Object.keys(cloneResponse.error).length === 0) {
                 core.setFailed(`Cloning the deployment failed due to an unexpected error`);
                 return;
             }
@@ -28299,15 +28297,14 @@ const cloneDeployment = async () => {
             name: input.newName,
         });
         if (!clonedResponse.ok) {
-            if (!clonedResponse.error ||
-                Object.keys(clonedResponse.error).length === 0) {
+            if (!clonedResponse.error || Object.keys(clonedResponse.error).length === 0) {
                 core.setFailed(`Getting the cloned deployment failed due to an unexpected error`);
                 return;
             }
             core.setFailed(` ${clonedResponse.error.code}: ${clonedResponse.error.message}`);
             return;
         }
-        core.setOutput("public-url", (_q = clonedResponse.result) === null || _q === void 0 ? void 0 : _q.url);
+        core.setOutput('public-url', (_q = clonedResponse.result) === null || _q === void 0 ? void 0 : _q.url);
     }
     catch (error) {
         if (error instanceof Error) {
@@ -28361,14 +28358,13 @@ const deployment_1 = __importDefault(__nccwpck_require__(1526));
 const deleteDeployment = async () => {
     try {
         const input = {
-            project: core.getInput("project", { required: true }),
-            location: core.getInput("location", { required: true }),
-            name: core.getInput("name", { required: true }),
+            project: core.getInput('project', { required: true }),
+            location: core.getInput('location', { required: true }),
+            name: core.getInput('name', { required: true }),
         };
         const deleteResponse = await deployment_1.default.delete(input);
         if (!deleteResponse.ok) {
-            if (!deleteResponse.error ||
-                Object.keys(deleteResponse.error).length === 0) {
+            if (!deleteResponse.error || Object.keys(deleteResponse.error).length === 0) {
                 core.setFailed(`Deleting the deployment failed due to an unexpected error`);
                 return;
             }
@@ -28426,20 +28422,19 @@ const deployNewRevision = async () => {
     var _a, _b;
     try {
         const input = {
-            project: core.getInput("project", { required: true }),
-            location: core.getInput("location", { required: true }),
-            name: core.getInput("name", { required: true }),
-            image: core.getInput("image", { required: true }),
-            port: parseInt(core.getInput("port", { required: true })),
-            type: core.getInput("type", { required: true }),
+            project: core.getInput('project', { required: true }),
+            location: core.getInput('location', { required: true }),
+            name: core.getInput('name', { required: true }),
+            image: core.getInput('image', { required: true }),
+            port: parseInt(core.getInput('port', { required: true })),
+            type: core.getInput('type', { required: true }),
         };
         const createResponse = await deployment_1.default.create(input);
         if (!createResponse.ok &&
             ((_a = createResponse.error) === null || _a === void 0 ? void 0 : _a.code) === types_1.ErrorCode.DEPLOYMENT_NAME_ALREADY_EXISTS) {
             const deployResponse = await deployment_1.default.deploy(input);
             if (!deployResponse.ok) {
-                if (!deployResponse.error ||
-                    Object.keys(deployResponse.error).length === 0) {
+                if (!deployResponse.error || Object.keys(deployResponse.error).length === 0) {
                     core.setFailed(`Deploying the new revision failed due to an unexpected error`);
                     return;
                 }
@@ -28449,8 +28444,7 @@ const deployNewRevision = async () => {
         }
         else {
             if (!createResponse.ok) {
-                if (!createResponse.error ||
-                    Object.keys(createResponse.error).length === 0) {
+                if (!createResponse.error || Object.keys(createResponse.error).length === 0) {
                     core.setFailed(`Creating the deployment failed due to an unexpected error`);
                     return;
                 }
@@ -28471,7 +28465,7 @@ const deployNewRevision = async () => {
             core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}`);
             return;
         }
-        core.setOutput("public_url", (_b = getResponse.result) === null || _b === void 0 ? void 0 : _b.url);
+        core.setOutput('public_url', (_b = getResponse.result) === null || _b === void 0 ? void 0 : _b.url);
     }
     catch (error) {
         if (error instanceof Error) {
@@ -28514,11 +28508,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const httpClient_1 = __importDefault(__nccwpck_require__(779));
-const baseUrl = "https://api-stag-899570118063554590.nortezh0.deploys.app/user";
+const baseUrl = 'https://api-stag-899570118063554590.nortezh0.deploys.app/user';
 class DeploymentService extends httpClient_1.default {
     static async sendRequest(url, payload, config) {
-        const credential = `${process.env["SA_AUTH_EMAIL"]}:${process.env["SA_AUTH_KEY"]}`;
-        const encodedCred = Buffer.from(credential).toString("base64");
+        const credential = `${process.env['SA_AUTH_EMAIL']}:${process.env['SA_AUTH_KEY']}`;
+        const encodedCred = Buffer.from(credential).toString('base64');
         const headers = {
             ...config === null || config === void 0 ? void 0 : config.headers,
             Authorization: `Basic ${encodedCred}`,
@@ -28646,7 +28640,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.cryptpRandomString = void 0;
 const crypto_1 = __importDefault(__nccwpck_require__(6113));
 const cryptpRandomString = (length) => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const randomArray = new Uint8Array(length);
     crypto_1.default.getRandomValues(randomArray);
     return Array.from(randomArray, (number) => chars[number % chars.length]).join('');
