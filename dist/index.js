@@ -28673,7 +28673,7 @@ class HttpClient {
             return response.data;
         }
         catch (error) {
-            throw error;
+            throw new Error(`HTTP POST request failed: ${error}`);
         }
     }
 }

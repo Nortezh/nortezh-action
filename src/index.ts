@@ -20,7 +20,7 @@ async function run(): Promise<void> {
       }
     } else {
       core.setFailed(
-        'Deployment action type must be "deployment.create-revision", "deployment.delete" or "deployment.clone"'
+        'Deployment action type must be "deployment.create-revision", "deployment.delete" or "deployment.clone"',
       );
     }
   } catch (error) {
