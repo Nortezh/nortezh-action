@@ -3,6 +3,7 @@ import HttpClient from "./utils/httpClient";
 import {
   CreateDeploymentRequest,
   CreateDeploymentResponse,
+  DeleteDeploymentRequest,
   DeployNewRevisionRequest,
   GetDeploymentRequest,
   GetDeploymentResponse,
@@ -64,4 +65,16 @@ export default class DeploymentService extends HttpClient {
       config
     );
   }
+
+  static async delete(
+    payload: DeleteDeploymentRequest,
+    config?: AxiosRequestConfig
+  ): Promise<ResponseDto<any>> {
+    return await this.sendRequest<ResponseDto<any>>(
+      `${baseUrl}/deployment.delete`,
+      payload,
+      config
+    );
+  }
+
 }
