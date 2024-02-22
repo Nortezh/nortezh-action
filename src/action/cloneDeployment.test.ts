@@ -22,7 +22,10 @@ describe('cloneDeployment', () => {
   });
 
   it('should fail if getting the deployment fails', async () => {
-    (DeploymentService.get as jest.Mock).mockResolvedValue({ ok: false, error: { code: 'error_code', message: 'error_message' } });
+    (DeploymentService.get as jest.Mock).mockResolvedValue({
+      ok: false,
+      error: { code: 'error_code', message: 'error_message' },
+    });
 
     await cloneDeployment();
 
@@ -32,7 +35,10 @@ describe('cloneDeployment', () => {
 
   it('should fail if cloning the deployment fails', async () => {
     (DeploymentService.get as jest.Mock).mockResolvedValue({ ok: true, result: {} });
-    (DeploymentService.create as jest.Mock).mockResolvedValue({ ok: false, error: { code: 'error_code', message: 'error_message' } });
+    (DeploymentService.create as jest.Mock).mockResolvedValue({
+      ok: false,
+      error: { code: 'error_code', message: 'error_message' },
+    });
 
     await cloneDeployment();
 
@@ -43,7 +49,10 @@ describe('cloneDeployment', () => {
   it('should fail if getting the cloned deployment fails', async () => {
     (DeploymentService.get as jest.Mock).mockResolvedValueOnce({ ok: true, result: {} });
     (DeploymentService.create as jest.Mock).mockResolvedValue({ ok: true, result: {} });
-    (DeploymentService.get as jest.Mock).mockResolvedValueOnce({ ok: false, error: { code: 'error_code', message: 'error_message' } });
+    (DeploymentService.get as jest.Mock).mockResolvedValueOnce({
+      ok: false,
+      error: { code: 'error_code', message: 'error_message' },
+    });
 
     await cloneDeployment();
 
