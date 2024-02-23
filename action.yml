@@ -1,6 +1,7 @@
 name: Nortezh Action
 description: Nortezh Action to Manage Deployments
 author: Nortezh
+icon: box
 
 inputs:
   action:
