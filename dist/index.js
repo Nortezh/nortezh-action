@@ -28426,9 +28426,12 @@ const deployNewRevision = async () => {
             location: core.getInput('location', { required: true }),
             name: core.getInput('name', { required: true }),
             image: core.getInput('image', { required: true }),
-            port: parseInt(core.getInput('port', { required: true })),
-            type: core.getInput('type', { required: true }),
+            port: parseInt(core.getInput('port')),
         };
+        const typeInput = core.getInput('type');
+        if (typeInput) {
+            input.type = typeInput;
+        }
         const createResponse = await deployment_1.default.create(input);
         if (!createResponse.ok &&
             ((_a = createResponse.error) === null || _a === void 0 ? void 0 : _a.code) === types_1.ErrorCode.DEPLOYMENT_NAME_ALREADY_EXISTS) {

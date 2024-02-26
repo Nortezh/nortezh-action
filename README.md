@@ -12,16 +12,16 @@
 
 This action type will create a new deployment if no deployment with the provided project, location, and name has been created before. If a deployment already exists, it will deploy a new revision with the new provided configuration.
 
-Inputs : **all required**
+Inputs :
 | Parameter | Description |
 |-----------|-------------------------|
-| `action` | Type of an action. Should be `deployment.create-revision` to create a deployment or deploy new revision. |
-| `project` | Project |
-| `location`| Deploy location id |
-| `name` | Deployment name |
-| `image` | Docker image to deploy |
-| `port` | Deployment port |
-| `type` | Deployment type |
+| `action` | **Required** type of an action. Should be `deployment.create-revision` to create a deployment or deploy new revision. |
+| `project` | **Required** project |
+| `location`| **Required** deploy location id |
+| `name` | **Required** deployment name |
+| `image` | **Required** docker image to deploy |
+| `port` | **Optional** deployment port, default is 80 |
+| `type` | **Optional** deployment type, default is 'WebService' |
 
 Environment variables:
 | Variable | Description |
@@ -37,6 +37,7 @@ Outputs:
 ### Clone a deployment
 
 The new cloned deployment will have a new name and image, with its configuration copied from the original deployment.
+
 Inputs :
 | Parameter | Description |
 |-----------|-------------------------|
