@@ -9,14 +9,18 @@ import DeploymentService from '../deployment';
 
 export const deployNewRevision = async (): Promise<void> => {
   try {
-    const input = {
+    const input: CreateDeploymentRequest & { type?: string } = {
       project: core.getInput('project', { required: true }),
       location: core.getInput('location', { required: true }),
       name: core.getInput('name', { required: true }),
       image: core.getInput('image', { required: true }),
-      port: parseInt(core.getInput('port', { required: true })),
-      type: core.getInput('type', { required: true }),
+      port: parseInt(core.getInput('port')),
     };
+
+    const typeInput = core.getInput('type');
+    if (typeInput) {
+      input.type = typeInput;
+    }
 
     const createResponse = await DeploymentService.create(input as CreateDeploymentRequest);
     if (

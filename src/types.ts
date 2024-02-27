@@ -1,12 +1,12 @@
 export enum DeploymentActionType {
-  Create = "deployment.create-revision",
-  Delete = "deployment.delete",
-  Clone = "deployment.clone",
+  Create = 'deployment.create-revision',
+  Delete = 'deployment.delete',
+  Clone = 'deployment.clone',
 }
 
 export enum ErrorCode {
-  DEPLOYMENT_NOT_FOUND = "DEPLOYMENT_NOT_FOUND",
-  DEPLOYMENT_NAME_ALREADY_EXISTS = "DEPLOYMENT_NAME_ALREADY_EXISTS",
+  DEPLOYMENT_NOT_FOUND = 'DEPLOYMENT_NOT_FOUND',
+  DEPLOYMENT_NAME_ALREADY_EXISTS = 'DEPLOYMENT_NAME_ALREADY_EXISTS',
 }
 
 export interface ResponseError {
@@ -70,15 +70,6 @@ export interface GetDeploymentResponse {
   deployedByEmail: string;
 }
 
-export interface Deployment {
-  project: string;
-  location: string;
-  name: string;
-  image: string;
-  port: number;
-  type: string;
-}
-
 interface ResourceValue {
   cpu: string;
   memory: string;
@@ -89,7 +80,13 @@ interface Resource {
   limits: ResourceValue;
 }
 
-export interface CreateDeploymentRequest extends Deployment {
+export interface CreateDeploymentRequest {
+  project: string;
+  location: string;
+  name: string;
+  image: string;
+  port?: number;
+  type?: string;
   minReplica?: number;
   maxReplica?: number;
   protocol?: string;
@@ -104,7 +101,6 @@ export interface CreateDeploymentRequest extends Deployment {
   schedule?: string;
   mountData?: Record<string, string>;
   resources?: Resource;
-  
 }
 
 export interface CreateDeploymentResponse {
