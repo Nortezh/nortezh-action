@@ -17,7 +17,10 @@ export const deleteDeployment = async (): Promise<void> => {
         core.setFailed(`Deleting the deployment failed due to an unexpected error`);
         return;
       }
-      core.setFailed(` ${deleteResponse.error.code}: ${deleteResponse.error.message}`);
+      core.setFailed(
+        ` ${deleteResponse.error.code}: ${deleteResponse.error.message}` +
+          (deleteResponse.error.items ? ` (error causes: ${deleteResponse.error.items})` : ''),
+      );
       return;
     }
   } catch (error) {

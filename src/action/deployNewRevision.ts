@@ -9,18 +9,14 @@ import DeploymentService from '../deployment';
 
 export const deployNewRevision = async (): Promise<void> => {
   try {
-    const input: CreateDeploymentRequest & { type?: string } = {
+    const input = {
       project: core.getInput('project', { required: true }),
       location: core.getInput('location', { required: true }),
       name: core.getInput('name', { required: true }),
       image: core.getInput('image', { required: true }),
       port: parseInt(core.getInput('port')),
+      type: core.getInput('type'),
     };
-
-    const typeInput = core.getInput('type');
-    if (typeInput) {
-      input.type = typeInput;
-    }
 
     const createResponse = await DeploymentService.create(input as CreateDeploymentRequest);
     if (
@@ -33,7 +29,10 @@ export const deployNewRevision = async (): Promise<void> => {
           core.setFailed(`Deploying the new revision failed due to an unexpected error`);
           return;
         }
-        core.setFailed(` ${deployResponse.error.code}: ${deployResponse.error.message}`);
+        core.setFailed(
+          ` ${deployResponse.error.code}: ${deployResponse.error.message}` +
+            (deployResponse.error.items ? ` (error causes: ${deployResponse.error.items})` : ''),
+        );
         return;
       }
     } else {
@@ -42,7 +41,10 @@ export const deployNewRevision = async (): Promise<void> => {
           core.setFailed(`Creating the deployment failed due to an unexpected error`);
           return;
         }
-        core.setFailed(` ${createResponse.error.code}: ${createResponse.error.message}`);
+        core.setFailed(
+          ` ${createResponse.error.code}: ${createResponse.error.message}` +
+            (createResponse.error.items ? ` (error causes: ${createResponse.error.items})` : ''),
+        );
         return;
       }
     }
@@ -58,7 +60,10 @@ export const deployNewRevision = async (): Promise<void> => {
         core.setFailed(`Getting the deployment failed due to an unexpected error`);
         return;
       }
-      core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}`);
+      core.setFailed(
+        ` ${getResponse.error.code}: ${getResponse.error.message}` +
+          (getResponse.error.items ? ` (error causes: ${getResponse.error.items})` : ''),
+      );
       return;
     }
 

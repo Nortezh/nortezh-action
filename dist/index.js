@@ -28260,7 +28260,8 @@ const cloneDeployment = async () => {
                 core.setFailed(`Getting the deployment failed due to an unexpected error`);
                 return;
             }
-            core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}`);
+            core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}` +
+                (getResponse.error.items ? ` (error causes: ${getResponse.error.items})` : ''));
             return;
         }
         const cloneResponse = await deployment_1.default.create({
@@ -28276,7 +28277,7 @@ const cloneDeployment = async () => {
             internal: (_f = getResponse.result) === null || _f === void 0 ? void 0 : _f.internal,
             env: (_g = getResponse.result) === null || _g === void 0 ? void 0 : _g.env,
             command: (_h = getResponse.result) === null || _h === void 0 ? void 0 : _h.command,
-            arg: (_j = getResponse.result) === null || _j === void 0 ? void 0 : _j.arg,
+            args: (_j = getResponse.result) === null || _j === void 0 ? void 0 : _j.args,
             pullSecret: (_k = getResponse.result) === null || _k === void 0 ? void 0 : _k.pullSecret,
             disk: (_l = getResponse.result) === null || _l === void 0 ? void 0 : _l.disk,
             schedule: (_m = getResponse.result) === null || _m === void 0 ? void 0 : _m.schedule,
@@ -28288,7 +28289,8 @@ const cloneDeployment = async () => {
                 core.setFailed(`Cloning the deployment failed due to an unexpected error`);
                 return;
             }
-            core.setFailed(` ${cloneResponse.error.code}: ${cloneResponse.error.message}`);
+            core.setFailed(` ${cloneResponse.error.code}: ${cloneResponse.error.message}` +
+                (cloneResponse.error.items ? ` (error causes: ${cloneResponse.error.items})` : ''));
             return;
         }
         const clonedResponse = await deployment_1.default.get({
@@ -28301,7 +28303,8 @@ const cloneDeployment = async () => {
                 core.setFailed(`Getting the cloned deployment failed due to an unexpected error`);
                 return;
             }
-            core.setFailed(` ${clonedResponse.error.code}: ${clonedResponse.error.message}`);
+            core.setFailed(` ${clonedResponse.error.code}: ${clonedResponse.error.message}` +
+                (clonedResponse.error.items ? ` (error causes: ${clonedResponse.error.items})` : ''));
             return;
         }
         core.setOutput('public-url', (_q = clonedResponse.result) === null || _q === void 0 ? void 0 : _q.url);
@@ -28368,7 +28371,8 @@ const deleteDeployment = async () => {
                 core.setFailed(`Deleting the deployment failed due to an unexpected error`);
                 return;
             }
-            core.setFailed(` ${deleteResponse.error.code}: ${deleteResponse.error.message}`);
+            core.setFailed(` ${deleteResponse.error.code}: ${deleteResponse.error.message}` +
+                (deleteResponse.error.items ? ` (error causes: ${deleteResponse.error.items})` : ''));
             return;
         }
     }
@@ -28427,11 +28431,8 @@ const deployNewRevision = async () => {
             name: core.getInput('name', { required: true }),
             image: core.getInput('image', { required: true }),
             port: parseInt(core.getInput('port')),
+            type: core.getInput('type'),
         };
-        const typeInput = core.getInput('type');
-        if (typeInput) {
-            input.type = typeInput;
-        }
         const createResponse = await deployment_1.default.create(input);
         if (!createResponse.ok &&
             ((_a = createResponse.error) === null || _a === void 0 ? void 0 : _a.code) === types_1.ErrorCode.DEPLOYMENT_NAME_ALREADY_EXISTS) {
@@ -28441,7 +28442,8 @@ const deployNewRevision = async () => {
                     core.setFailed(`Deploying the new revision failed due to an unexpected error`);
                     return;
                 }
-                core.setFailed(` ${deployResponse.error.code}: ${deployResponse.error.message}`);
+                core.setFailed(` ${deployResponse.error.code}: ${deployResponse.error.message}` +
+                    (deployResponse.error.items ? ` (error causes: ${deployResponse.error.items})` : ''));
                 return;
             }
         }
@@ -28451,7 +28453,8 @@ const deployNewRevision = async () => {
                     core.setFailed(`Creating the deployment failed due to an unexpected error`);
                     return;
                 }
-                core.setFailed(` ${createResponse.error.code}: ${createResponse.error.message}`);
+                core.setFailed(` ${createResponse.error.code}: ${createResponse.error.message}` +
+                    (createResponse.error.items ? ` (error causes: ${createResponse.error.items})` : ''));
                 return;
             }
         }
@@ -28465,7 +28468,8 @@ const deployNewRevision = async () => {
                 core.setFailed(`Getting the deployment failed due to an unexpected error`);
                 return;
             }
-            core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}`);
+            core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}` +
+                (getResponse.error.items ? ` (error causes: ${getResponse.error.items})` : ''));
             return;
         }
         core.setOutput('public_url', (_b = getResponse.result) === null || _b === void 0 ? void 0 : _b.url);
