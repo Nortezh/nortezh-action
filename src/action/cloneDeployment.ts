@@ -23,7 +23,10 @@ export const cloneDeployment = async (): Promise<void> => {
         core.setFailed(`Getting the deployment failed due to an unexpected error`);
         return;
       }
-      core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}`);
+      core.setFailed(
+        ` ${getResponse.error.code}: ${getResponse.error.message}` +
+          (getResponse.error.items ? ` (error causes: ${getResponse.error.items})` : ''),
+      );
       return;
     }
 
@@ -40,7 +43,7 @@ export const cloneDeployment = async (): Promise<void> => {
       internal: getResponse.result?.internal,
       env: getResponse.result?.env,
       command: getResponse.result?.command,
-      arg: getResponse.result?.arg,
+      args: getResponse.result?.args,
       pullSecret: getResponse.result?.pullSecret,
       disk: getResponse.result?.disk,
       schedule: getResponse.result?.schedule,
@@ -53,7 +56,10 @@ export const cloneDeployment = async (): Promise<void> => {
         core.setFailed(`Cloning the deployment failed due to an unexpected error`);
         return;
       }
-      core.setFailed(` ${cloneResponse.error.code}: ${cloneResponse.error.message}`);
+      core.setFailed(
+        ` ${cloneResponse.error.code}: ${cloneResponse.error.message}` +
+          (cloneResponse.error.items ? ` (error causes: ${cloneResponse.error.items})` : ''),
+      );
       return;
     }
     const clonedResponse = await DeploymentService.get({
@@ -67,7 +73,10 @@ export const cloneDeployment = async (): Promise<void> => {
         core.setFailed(`Getting the cloned deployment failed due to an unexpected error`);
         return;
       }
-      core.setFailed(` ${clonedResponse.error.code}: ${clonedResponse.error.message}`);
+      core.setFailed(
+        ` ${clonedResponse.error.code}: ${clonedResponse.error.message}` +
+          (clonedResponse.error.items ? ` (error causes: ${clonedResponse.error.items})` : ''),
+      );
       return;
     }
 

@@ -12,6 +12,7 @@ export enum ErrorCode {
 export interface ResponseError {
   code?: string;
   message?: string;
+  items?: string[];
 }
 
 export interface ResponseDto<T = unknown> {
@@ -46,7 +47,7 @@ export interface GetDeploymentResponse {
   internal: boolean;
   env: Record<string, string>;
   command: string[];
-  arg: string[];
+  args: string[];
   pullSecret: string;
   disk: Disk;
   schedule: string;
@@ -100,7 +101,7 @@ export interface CreateDeploymentRequest {
   disk?: Disk;
   schedule?: string;
   mountData?: Record<string, string>;
-  resources?: Resource;
+  resource?: Resource;
 }
 
 export interface CreateDeploymentResponse {
