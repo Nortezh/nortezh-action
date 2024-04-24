@@ -10,7 +10,7 @@ import {
   ResponseDto,
 } from './types';
 
-const baseUrl = 'https://api-stag-899570118063554590.nortezh0.deploys.app/user';
+const baseUrl = 'https://api.nortezh.com/user';
 
 export default class DeploymentService extends HttpClient {
   private static async sendRequest<T, D = unknown>(
