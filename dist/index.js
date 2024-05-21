@@ -28515,7 +28515,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const httpClient_1 = __importDefault(__nccwpck_require__(779));
-const baseUrl = 'https://api-stag-899570118063554590.nortezh0.deploys.app/user';
+const baseUrl = 'https://api.nortezh.com/user';
 class DeploymentService extends httpClient_1.default {
     static async sendRequest(url, payload, config) {
         const credential = `${process.env['SA_AUTH_EMAIL']}:${process.env['SA_AUTH_KEY']}`;
