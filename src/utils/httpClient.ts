@@ -7,7 +7,13 @@ export default class HttpClient {
     config?: AxiosRequestConfig,
   ): Promise<T> {
     try {
-      const response = await axios.post<T>(url, data, config);
+      const response = await axios.post<T>(url, data, {
+        ...config,
+        headers: {
+          ...config?.headers,
+          'User-Agent': 'nortezh-action',
+        },
+      });
 
       return response.data;
     } catch (error) {

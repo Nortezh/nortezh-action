@@ -28670,7 +28670,13 @@ const axios_1 = __importDefault(__nccwpck_require__(8757));
 class HttpClient {
     static async post(url, data, config) {
         try {
-            const response = await axios_1.default.post(url, data, config);
+            const response = await axios_1.default.post(url, data, {
+                ...config,
+                headers: {
+                    ...config === null || config === void 0 ? void 0 : config.headers,
+                    'User-Agent': 'nortezh-action',
+                },
+            });
             return response.data;
         }
         catch (error) {

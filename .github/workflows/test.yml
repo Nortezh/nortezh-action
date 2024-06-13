@@ -1,7 +1,7 @@
 name: Test
 
 on:
-    pull_request:
+  pull_request:
 
 jobs:
   run-my-action:
@@ -12,11 +12,11 @@ jobs:
       - uses: ./
         with:
           action: deployment.create-revision
-          project: "project-oei-1"
-          location: "nortezh-stag"
-          name: test-xxx
-          image: nginx
-          port: 85
+          project: mock-f2g-callback
+          location: nortezh-1
+          name: api
+          image: ghcr.io/noz-acme/callback-tbp-be:487e6cf
+          port: 3001
           type: WebService
         env:
           SA_AUTH_EMAIL: ${{ secrets.SA_AUTH_EMAIL }}
