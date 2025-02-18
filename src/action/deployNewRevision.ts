@@ -6,6 +6,7 @@ import {
   GetDeploymentRequest,
 } from '../types';
 import DeploymentService from '../deployment';
+import { parseEnvInput } from '../utils';
 
 export const deployNewRevision = async (): Promise<void> => {
   try {
@@ -16,6 +17,7 @@ export const deployNewRevision = async (): Promise<void> => {
       image: core.getInput('image', { required: true }),
       port: parseInt(core.getInput('port')),
       type: core.getInput('type'),
+      env: parseEnvInput(core.getInput('env')),
     };
 
     const createResponse = await DeploymentService.create(input as CreateDeploymentRequest);

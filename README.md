@@ -12,7 +12,8 @@
 
 This action type will create a new deployment if no deployment with the provided project, location, and name has been created before. If a deployment already exists, it will deploy a new revision with the new provided configuration.
 
-Inputs :
+**Inputs:**
+
 | Parameter | Description |
 |-----------|-------------------------|
 | `action` | **Required** type of an action. Should be `deployment.create-revision` to create a deployment or deploy new revision. |
@@ -21,24 +22,28 @@ Inputs :
 | `name` | **Required** deployment name |
 | `image` | **Required** docker image to deploy |
 | `port` | **Optional** deployment port, default is 80 |
-| `type` | **Optional** deployment type, default is 'WebService' |
+| `type` | **Optional** deployment type, default is 'WebService'. Supported types: WebService, Worker, Cronjob. |
+| `env` | **Optional** environment variables in YAML format |
 
-Environment variables:
+**Environment variables:**
+
 | Variable | Description |
 |-----------|-------------------------|
 | `SA_AUTH_EMAIL` | Service account email |
 | `SA_AUTH_KEY` | Service account key |
 
-Outputs:
+**Outputs:**
+
 | Outputs | Description |
 |---------|-------------------------|
-| `public_url` | Deployment public url to access |
+| `public_url` | Deployment public URL to access |
 
 ### Clone a deployment
 
 The new cloned deployment will have a new name and image, with its configuration copied from the original deployment.
 
-Inputs :
+**Inputs:**
+
 | Parameter | Description |
 |-----------|-------------------------|
 | `action` | **Required** type of an action. Should be `deployment.clone` to clone a deployment. |
@@ -47,21 +52,25 @@ Inputs :
 | `name` | **Required** deployment name that is to be cloned |
 | `image` | **Required** docker image to deploy |
 | `new_name`| **Optional** new deployment name. Randomly generated if a new deployment name is not provided |
+| `env` | **Optional** environment variables in YAML format |
 
-Environment variables:
+**Environment variables:**
+
 | Variable | Description |
 |-----------|-------------------------|
 | `SA_AUTH_EMAIL` | Service account email |
 | `SA_AUTH_KEY` | Service account key |
 
-Outputs:
+**Outputs:**
+
 | Outputs | Description |
 |---------|-------------------------|
-| `public_url` | Deployment public url to access |
+| `public_url` | Deployment public URL to access |
 
 ### Delete a deployment
 
-Inputs : **all required**
+**Inputs:** (all required)
+
 | Parameter | Description |
 |-----------|-------------------------|
 | `action` | Type of an action. Should be `deployment.delete` to delete a deployment. |
@@ -69,17 +78,18 @@ Inputs : **all required**
 | `location`| Deploy location id |
 | `name` | Deployment name |
 
-Environment variables:
+**Environment variables:**
+
 | Variable | Description |
 |-----------|-------------------------|
 | `SA_AUTH_EMAIL` | Service account email |
 | `SA_AUTH_KEY` | Service account key |
 
-Outputs: **None**
+**Outputs:** None
 
 ## Example
 
-```
+```yaml
 name: Deploy
 
 on:
@@ -100,6 +110,9 @@ jobs:
           image: nginx
           port: 80
           type: WebService
+          env: |
+            PORT: 80
+            DB_URL: localhost:5432
         env:
           SA_AUTH_EMAIL: ${{ secrets.SA_AUTH_EMAIL }}
           SA_AUTH_KEY: ${{ secrets.SA_AUTH_KEY }}

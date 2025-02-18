@@ -1,11 +1,10 @@
-import * as core from "@actions/core";
-import { DeploymentActionType } from "./types";
-import { cloneDeployment, deployNewRevision } from "./action";
-import { deleteDeployment } from "./action/deleteDeployment";
+import * as core from '@actions/core';
+import { DeploymentActionType } from './types';
+import { cloneDeployment, deployNewRevision, deleteDeployment } from './action';
 
 async function run(): Promise<void> {
   try {
-    const actionType = core.getInput("action") as DeploymentActionType;
+    const actionType = core.getInput('action') as DeploymentActionType;
     if (Object.values(DeploymentActionType).includes(actionType)) {
       if (actionType === DeploymentActionType.Create) {
         await deployNewRevision();
