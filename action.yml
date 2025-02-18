@@ -31,6 +31,9 @@ inputs:
   new_name:
     description: New Deployment Name
     required: false
+  env:
+    description: 'Environment variables'
+    required: false
 
 outputs:
   public_url:
