@@ -28712,7 +28712,7 @@ const types_1 = __nccwpck_require__(2384);
 const deployment_1 = __importDefault(__nccwpck_require__(1526));
 const utils_1 = __nccwpck_require__(6252);
 const deployNewRevision = async () => {
-    var _a, _b;
+    var _a, _b, _c;
     try {
         const input = {
             project: core.getInput('project', { required: true }),
@@ -28726,15 +28726,48 @@ const deployNewRevision = async () => {
         const createResponse = await deployment_1.default.create(input);
         if (!createResponse.ok &&
             ((_a = createResponse.error) === null || _a === void 0 ? void 0 : _a.code) === types_1.ErrorCode.DEPLOYMENT_NAME_ALREADY_EXISTS) {
-            const deployResponse = await deployment_1.default.deploy(input);
-            if (!deployResponse.ok) {
-                if (!deployResponse.error || Object.keys(deployResponse.error).length === 0) {
-                    core.setFailed(`Deploying the new revision failed due to an unexpected error`);
+            // env is provided - override all environment variables
+            if (input.env && Object.keys(input.env).length > 0) {
+                const deployResponse = await deployment_1.default.deploy(input);
+                if (!deployResponse.ok) {
+                    if (!deployResponse.error || Object.keys(deployResponse.error).length === 0) {
+                        core.setFailed(`Deploying the new revision failed due to an unexpected error`);
+                        return;
+                    }
+                    core.setFailed(` ${deployResponse.error.code}: ${deployResponse.error.message}` +
+                        (deployResponse.error.items ? ` (error causes: ${deployResponse.error.items})` : ''));
                     return;
                 }
-                core.setFailed(` ${deployResponse.error.code}: ${deployResponse.error.message}` +
-                    (deployResponse.error.items ? ` (error causes: ${deployResponse.error.items})` : ''));
-                return;
+            }
+            else {
+                // env is not provided - get exist env to avoid deleting existing env vars
+                const getResponse = await deployment_1.default.get({
+                    project: input.project,
+                    location: input.location,
+                    name: input.name,
+                });
+                if (!getResponse.ok) {
+                    if (!getResponse.error || Object.keys(getResponse.error).length === 0) {
+                        core.setFailed(`Getting the deployment failed due to an unexpected error`);
+                        return;
+                    }
+                    core.setFailed(` ${getResponse.error.code}: ${getResponse.error.message}` +
+                        (getResponse.error.items ? ` (error causes: ${getResponse.error.items})` : ''));
+                    return;
+                }
+                if ((_b = getResponse.result) === null || _b === void 0 ? void 0 : _b.env) {
+                    input.env = getResponse.result.env;
+                }
+                const deployResponse = await deployment_1.default.deploy(input);
+                if (!deployResponse.ok) {
+                    if (!deployResponse.error || Object.keys(deployResponse.error).length === 0) {
+                        core.setFailed(`Deploying the new revision failed due to an unexpected error`);
+                        return;
+                    }
+                    core.setFailed(` ${deployResponse.error.code}: ${deployResponse.error.message}` +
+                        (deployResponse.error.items ? ` (error causes: ${deployResponse.error.items})` : ''));
+                    return;
+                }
             }
         }
         else {
@@ -28762,7 +28795,7 @@ const deployNewRevision = async () => {
                 (getResponse.error.items ? ` (error causes: ${getResponse.error.items})` : ''));
             return;
         }
-        core.setOutput('public_url', (_b = getResponse.result) === null || _b === void 0 ? void 0 : _b.url);
+        core.setOutput('public_url', (_c = getResponse.result) === null || _c === void 0 ? void 0 : _c.url);
     }
     catch (error) {
         if (error instanceof Error) {

@@ -25,17 +25,55 @@ export const deployNewRevision = async (): Promise<void> => {
       !createResponse.ok &&
       createResponse.error?.code === ErrorCode.DEPLOYMENT_NAME_ALREADY_EXISTS
     ) {
-      const deployResponse = await DeploymentService.deploy(input as DeployNewRevisionRequest);
-      if (!deployResponse.ok) {
-        if (!deployResponse.error || Object.keys(deployResponse.error).length === 0) {
-          core.setFailed(`Deploying the new revision failed due to an unexpected error`);
+      // env is provided - override all environment variables
+      if (input.env && Object.keys(input.env).length > 0) {
+        const deployResponse = await DeploymentService.deploy(input as DeployNewRevisionRequest);
+        if (!deployResponse.ok) {
+          if (!deployResponse.error || Object.keys(deployResponse.error).length === 0) {
+            core.setFailed(`Deploying the new revision failed due to an unexpected error`);
+            return;
+          }
+          core.setFailed(
+            ` ${deployResponse.error.code}: ${deployResponse.error.message}` +
+              (deployResponse.error.items ? ` (error causes: ${deployResponse.error.items})` : ''),
+          );
           return;
         }
-        core.setFailed(
-          ` ${deployResponse.error.code}: ${deployResponse.error.message}` +
-            (deployResponse.error.items ? ` (error causes: ${deployResponse.error.items})` : ''),
-        );
-        return;
+      } else {
+        // env is not provided - get exist env to avoid deleting existing env vars
+        const getResponse = await DeploymentService.get({
+          project: input.project,
+          location: input.location,
+          name: input.name,
+        } as GetDeploymentRequest);
+        if (!getResponse.ok) {
+          if (!getResponse.error || Object.keys(getResponse.error).length === 0) {
+            core.setFailed(`Getting the deployment failed due to an unexpected error`);
+            return;
+          }
+          core.setFailed(
+            ` ${getResponse.error.code}: ${getResponse.error.message}` +
+              (getResponse.error.items ? ` (error causes: ${getResponse.error.items})` : ''),
+          );
+          return;
+        }
+
+        if (getResponse.result?.env) {
+          input.env = getResponse.result.env;
+        }
+
+        const deployResponse = await DeploymentService.deploy(input as DeployNewRevisionRequest);
+        if (!deployResponse.ok) {
+          if (!deployResponse.error || Object.keys(deployResponse.error).length === 0) {
+            core.setFailed(`Deploying the new revision failed due to an unexpected error`);
+            return;
+          }
+          core.setFailed(
+            ` ${deployResponse.error.code}: ${deployResponse.error.message}` +
+              (deployResponse.error.items ? ` (error causes: ${deployResponse.error.items})` : ''),
+          );
+          return;
+        }
       }
     } else {
       if (!createResponse.ok) {
