@@ -1,7 +1,7 @@
-export const parseEnvInput = (envInput: string): Record<string, string> => {
-  if (!envInput.trim()) return {};
+export const parseEnvInput = (envInput: string): Record<string, string> | null => {
+  if (!envInput.trim()) return null;
 
-  return envInput
+  const result = envInput
     .split('\n')
     .map((line) => line.trim())
     .filter((line) => line && line.includes(':'))
@@ -18,4 +18,6 @@ export const parseEnvInput = (envInput: string): Record<string, string> => {
       },
       {} as Record<string, string>,
     );
+
+  return Object.keys(result).length > 0 ? result : null;
 };
