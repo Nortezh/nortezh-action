@@ -10,6 +10,8 @@ import { parseEnvInput } from '../utils';
 
 export const deployNewRevision = async (): Promise<void> => {
   try {
+    const envInput = core.getInput('env');
+
     const input = {
       project: core.getInput('project', { required: true }),
       location: core.getInput('location', { required: true }),
@@ -17,7 +19,7 @@ export const deployNewRevision = async (): Promise<void> => {
       image: core.getInput('image', { required: true }),
       port: parseInt(core.getInput('port')),
       type: core.getInput('type'),
-      env: parseEnvInput(core.getInput('env')),
+      env: envInput ? parseEnvInput(envInput) : null,
     };
 
     const createResponse = await DeploymentService.create(input as CreateDeploymentRequest);

@@ -28714,6 +28714,7 @@ const utils_1 = __nccwpck_require__(6252);
 const deployNewRevision = async () => {
     var _a, _b;
     try {
+        const envInput = core.getInput('env');
         const input = {
             project: core.getInput('project', { required: true }),
             location: core.getInput('location', { required: true }),
@@ -28721,7 +28722,7 @@ const deployNewRevision = async () => {
             image: core.getInput('image', { required: true }),
             port: parseInt(core.getInput('port')),
             type: core.getInput('type'),
-            env: (0, utils_1.parseEnvInput)(core.getInput('env')),
+            env: envInput ? (0, utils_1.parseEnvInput)(envInput) : null,
         };
         const createResponse = await deployment_1.default.create(input);
         if (!createResponse.ok &&
@@ -29052,8 +29053,8 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.parseEnvInput = void 0;
 const parseEnvInput = (envInput) => {
     if (!envInput.trim())
-        return {};
-    return envInput
+        return null;
+    const result = envInput
         .split('\n')
         .map((line) => line.trim())
         .filter((line) => line && line.includes(':'))
@@ -29066,6 +29067,7 @@ const parseEnvInput = (envInput) => {
         }
         return acc;
     }, {});
+    return Object.keys(result).length > 0 ? result : null;
 };
 exports.parseEnvInput = parseEnvInput;
 

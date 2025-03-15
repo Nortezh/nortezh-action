@@ -12,6 +12,8 @@
 
 This action type will create a new deployment if no deployment with the provided project, location, and name has been created before. If a deployment already exists, it will deploy a new revision with the new provided configuration.
 
+If `env` is provided, it will override all existing environment variables. If env is not provided, the deployment will retain the existing environment variables to prevent accidental deletion.
+
 **Inputs:**
 
 | Parameter | Description |
@@ -23,7 +25,7 @@ This action type will create a new deployment if no deployment with the provided
 | `image` | **Required** docker image to deploy |
 | `port` | **Optional** deployment port, default is 80 |
 | `type` | **Optional** deployment type, default is 'WebService'. Supported types: WebService, Worker, Cronjob. |
-| `env` | **Optional** environment variables in YAML format |
+| `env` | **Optional** environment variables in YAML format. If omitted, existing environment variables will be retained. |
 
 **Environment variables:**
 
