@@ -28714,20 +28714,45 @@ const utils_1 = __nccwpck_require__(6252);
 const deployNewRevision = async () => {
     var _a, _b;
     try {
-        const envInput = core.getInput('env');
-        const input = {
+        let envVars = null;
+        const envFilePath = core.getInput('env_file');
+        if (envFilePath) {
+            const result = (0, utils_1.readEnvFile)(envFilePath);
+            if (result.error) {
+                core.warning(result.error);
+            }
+            else {
+                envVars = result.data;
+            }
+        }
+        if (!envVars) {
+            const envInput = core.getInput('env');
+            if (envInput) {
+                envVars = (0, utils_1.parseEnvInput)(envInput);
+            }
+        }
+        const typeInput = core.getInput('type');
+        const deploymentType = typeInput ? typeInput : undefined;
+        const baseInput = {
             project: core.getInput('project', { required: true }),
             location: core.getInput('location', { required: true }),
             name: core.getInput('name', { required: true }),
             image: core.getInput('image', { required: true }),
-            port: parseInt(core.getInput('port')),
-            type: core.getInput('type'),
-            env: envInput ? (0, utils_1.parseEnvInput)(envInput) : null,
+            port: parseInt(core.getInput('port')) || undefined,
+            type: deploymentType,
         };
-        const createResponse = await deployment_1.default.create(input);
+        const createInput = {
+            ...baseInput,
+            env: envVars || undefined,
+        };
+        const deployInput = {
+            ...baseInput,
+            addEnv: envVars || undefined,
+        };
+        const createResponse = await deployment_1.default.create(createInput);
         if (!createResponse.ok &&
             ((_a = createResponse.error) === null || _a === void 0 ? void 0 : _a.code) === types_1.ErrorCode.DEPLOYMENT_NAME_ALREADY_EXISTS) {
-            const deployResponse = await deployment_1.default.deploy(input);
+            const deployResponse = await deployment_1.default.deploy(deployInput);
             if (!deployResponse.ok) {
                 if (!deployResponse.error || Object.keys(deployResponse.error).length === 0) {
                     core.setFailed(`Deploying the new revision failed due to an unexpected error`);
@@ -28750,9 +28775,9 @@ const deployNewRevision = async () => {
             }
         }
         const getResponse = await deployment_1.default.get({
-            project: input.project,
-            location: input.location,
-            name: input.name,
+            project: baseInput.project,
+            location: baseInput.location,
+            name: baseInput.name,
         });
         if (!getResponse.ok) {
             if (!getResponse.error || Object.keys(getResponse.error).length === 0) {
@@ -29045,31 +29070,101 @@ exports.cryptpRandomString = cryptpRandomString;
 /***/ }),
 
 /***/ 3089:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
+        };
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.parseEnvInput = void 0;
+exports.readEnvFile = exports.parseEnvInput = void 0;
+const fs = __importStar(__nccwpck_require__(7147));
+const path = __importStar(__nccwpck_require__(1017));
 const parseEnvInput = (envInput) => {
     if (!envInput.trim())
         return null;
     const result = envInput
         .split('\n')
         .map((line) => line.trim())
-        .filter((line) => line && line.includes(':'))
+        .filter((line) => line && !line.startsWith('#'))
         .reduce((acc, line) => {
-        const [key, ...valueParts] = line.split(':');
-        const keyTrimmed = key.trim();
-        const valueTrimmed = valueParts.join(':').trim();
-        if (keyTrimmed && valueTrimmed) {
-            acc[keyTrimmed] = valueTrimmed;
+        if (line.includes('=')) {
+            const [key, ...valueParts] = line.split('=');
+            const keyTrimmed = key.trim();
+            const valueTrimmed = valueParts.join('=').trim();
+            if (keyTrimmed && valueTrimmed) {
+                acc[keyTrimmed] = valueTrimmed;
+            }
+        }
+        else if (line.includes(':')) {
+            const [key, ...valueParts] = line.split(':');
+            const keyTrimmed = key.trim();
+            const valueTrimmed = valueParts.join(':').trim();
+            if (keyTrimmed && valueTrimmed) {
+                acc[keyTrimmed] = valueTrimmed;
+            }
         }
         return acc;
     }, {});
     return Object.keys(result).length > 0 ? result : null;
 };
 exports.parseEnvInput = parseEnvInput;
+const readEnvFile = (filePath = '.env') => {
+    try {
+        const absolutePath = path.isAbsolute(filePath) ? filePath : path.join(process.cwd(), filePath);
+        if (!fs.existsSync(absolutePath)) {
+            return {
+                data: null,
+                error: `Environment file not found: ${absolutePath}`,
+            };
+        }
+        const fileContent = fs.readFileSync(absolutePath, 'utf-8');
+        const parsedEnv = (0, exports.parseEnvInput)(fileContent);
+        return {
+            data: parsedEnv,
+            error: null,
+        };
+    }
+    catch (error) {
+        const errorMessage = `Error reading environment file: ${error instanceof Error ? error.message : String(error)}`;
+        return {
+            data: null,
+            error: errorMessage,
+        };
+    }
+};
+exports.readEnvFile = readEnvFile;
 
 
 /***/ }),
