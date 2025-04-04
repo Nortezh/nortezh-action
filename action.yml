@@ -34,6 +34,9 @@ inputs:
   env:
     description: 'Environment variables'
     required: false
+  env_file:
+    description: 'Path to environment file (.env format)'
+    required: false
 
 outputs:
   public_url:
